@@ -22,10 +22,10 @@
                         <a href="#" class="nav-link">Home</a>
                     </li>
                     <li class="nav-item active">
-                        <a href="#" class="nav-link">About</a>
+                        <a href="/about" class="nav-link">About</a>
                     </li>
                     <li class="nav-item active">
-                        <a href="#" class="nav-link">Contact</a>
+                        <a href="/contact" class="nav-link">Contact</a>
                     </li>
                     <li class="nav-item active">
                         <a href="#" class="nav-link">Find</a>
@@ -33,7 +33,7 @@
                 </ul>
             </div>
 
-            <button type="button" class="btn btn-primary">Sign in</button>
+            <a href="/signin" class="btn btn-primary">Sign in</a>
         </div>
     </nav>
 
@@ -67,7 +67,7 @@
         <section class="py-5 text-center bg-white">
             <div class="container">
                 <h2 class="fw-light mb-4">Interested to Join Us?</h2>
-                <button type="submit" class="btn btn-warning">Sign up here</button>
+                <a href="/signup" class="btn btn-warning">Sign up here</a>
             </div>
         </section>
     </main>
