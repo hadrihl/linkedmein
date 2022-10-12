@@ -11,20 +11,20 @@
   <body>
     <div class="card mt-5" style="width: 20rem; margin: auto;">
         <div class="card-body text-center">
-            <form class="mb-4">
+            <form class="mb-4" action="/process_signup" method="post" modelattribute="user">
                 <span class="navbar-brand mt-1 h1">Linked<span class="text-primary">Me</span>In</span>
                 <h1 class="mb-4">Sign up</h1>
                 <div class="form-group mt-2">
                     <label for="username" class="visually-hidden">username</label>
-                    <input type="text" id="username" class="form-control" placeholder="Username" required autofocus>
+                    <input type="text" name="username" id="username" class="form-control" placeholder="Username" required autofocus>
                 </div>
                 <div class="form-group mt-2">
                     <label for="email" class="visually-hidden">email</label>
-                    <input type="email" id="email" class="form-control" placeholder="Email" required>
+                    <input type="email" name="email" id="email" class="form-control" placeholder="Email" required>
                 </div>
                 <div class="form-group mt-2 mb-5">
                     <label for="password" class="visually-hidden">password</label>
-                    <input type="password" id="password" class="form-control" placeholder="Password">
+                    <input type="password" name="password" id="password" class="form-control" placeholder="Password">
                 </div>
                 <div class="form-group d-grid gap-2">
                     <button class="btn btn-success w-100">Sign up with email</button>
