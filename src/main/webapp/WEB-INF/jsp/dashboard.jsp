@@ -22,10 +22,10 @@
                         <a href="#" class="nav-link">Home</a>
                     </li>
                     <li class="nav-item active">
-                        <a href="#" class="nav-link">About</a>
+                        <a href="/about" class="nav-link">About</a>
                     </li>
                     <li class="nav-item active">
-                      <a href="#" class="nav-link">Contact</a>
+                      <a href="/contact" class="nav-link">Contact</a>
                     </li>
                     <li class="nav-item active">
                       <a href="#" class="nav-link">Find</a>

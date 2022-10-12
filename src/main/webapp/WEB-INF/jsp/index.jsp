@@ -22,10 +22,10 @@
                         <a href="#" class="nav-link">Home</a>
                     </li>
                     <li class="nav-item active">
-                        <a href="#" class="nav-link">About</a>
+                        <a href="/about" class="nav-link">About</a>
                     </li>
                     <li class="nav-item active">
-                        <a href="#" class="nav-link">Contact</a>
+                        <a href="/contact" class="nav-link">Contact</a>
                     </li>
                     <li class="nav-item active">
                         <a href="#" class="nav-link">Find</a>
@@ -33,7 +33,7 @@
                 </ul>
             </div>
 
-            <button type="button" class="btn btn-primary">Sign in</button>
+            <a href="/signin" class="btn btn-primary">Sign in</a>
         </div>
     </nav>
 
@@ -44,7 +44,7 @@
                     <img class="img-fluid mb-3" src="assets/img/comm_skills_web_copy.jpg" alt="welcome">
                     <h2 class="fw-light mb-2">Welcome to LinkedMeIn Portal</h2>
                     <p class="lead text-muted">We are a digital talents platform with the mission to deliver growth for software developers talents and enterprises in the digital economy.</p>
-                    <button type="submit" class="btn btn-success">Sign up now</button>
+                    <a href="/signup" class="btn btn-success">Sign up now</a>
                 </div>
             </div>
         </section>
