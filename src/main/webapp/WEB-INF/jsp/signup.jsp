@@ -12,6 +12,9 @@
     <div class="card mt-5" style="width: 20rem; margin: auto;">
         <div class="card-body text-center">
             <form class="mb-4" action="/process_signup" method="post" modelattribute="user">
+            <input type="hidden" name="${_csrf.parameterName}"
+						value="${_csrf.token}" />
+            
                 <span class="navbar-brand mt-1 h1">Linked<span class="text-primary">Me</span>In</span>
                 <h1 class="mb-4">Sign up</h1>
                 <div class="form-group mt-2">

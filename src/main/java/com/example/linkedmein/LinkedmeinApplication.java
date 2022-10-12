@@ -16,5 +16,4 @@ public class LinkedmeinApplication extends SpringBootServletInitializer {
 	public static void main(String[] args) {
 		SpringApplication.run(LinkedmeinApplication.class, args);
 	}
-
 }

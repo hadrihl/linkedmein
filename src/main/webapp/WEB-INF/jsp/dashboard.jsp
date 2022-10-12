@@ -33,8 +33,15 @@
                 </ul>
             </div>
 
-            <button type="button" class="btn btn-outline-dark me-2" style="border: none;">@hadrihl</button>
-            <button type="button" class="btn btn-danger">Logout</button>
+            <button type="button" class="btn btn-outline-dark me-2" style="border: none;">
+            	@<c:out value="${pageContext.request.remoteUser}" />
+            </button>
+            
+            <form action="/logout" method="post">
+            <input type="hidden" name="${_csrf.parameterName}"
+				value="${_csrf.token}" />
+            	<button type="submit" class="btn btn-danger">Logout</button>
+            </form>
         </div>
 
     </nav>
