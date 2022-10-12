@@ -1,6 +1,12 @@
 package com.example.linkedmein.controller;
 
+import java.io.UnsupportedEncodingException;
+
+import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,8 +54,23 @@ public class CommonController {
 	
 	// register new user
 	@PostMapping("/process_signup")
-	public String registerNewUser(Model model, @ModelAttribute("user") User user) {
-		userService.saveUser(user);
+	public String registerNewUser(Model model, @ModelAttribute("user") User user, HttpServletRequest request) throws UnsupportedEncodingException, MessagingException {
+		
+		userService.register(user, getSiteURL(request));
 		return "thank-you";
+	}
+	
+	private String getSiteURL(HttpServletRequest request) {
+		String siteURL = request.getRequestURL().toString();
+		return siteURL.replace(request.getServletPath(), "");
+	}
+	
+	@GetMapping("/verify")
+	public String verifyUser(@Param("code") String code) {
+		if(userService.verify(code)) {
+			return "verify_success";
+		} else {
+			return "verify_fail";
+		}
 	}
 }
