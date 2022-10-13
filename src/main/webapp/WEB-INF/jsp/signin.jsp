@@ -32,6 +32,8 @@
                 </div>
                 <div class="form-group d-grid gap-2">
                     <button type="submit" class="btn btn-success w-100"> Sign in with Email</button>
+                    
+                    <a href="/forgot_password">Forgot your password?</a>
                 </div>
                 <footer class="mt-5 text-muted">&copy; 2022. <a href="/">linkedMeIn</a> portal.<br/>
                     Made with <i class="fa-solid fa-heart"></i> in Penang.<br/>
