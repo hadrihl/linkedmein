@@ -9,6 +9,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -53,8 +54,8 @@ public class UserService {
 		throws MessagingException, UnsupportedEncodingException {
 		
 		String toAddress = user.getEmail();
-		String fromAddress = "hadrihilmi@gmail.com";
-		String senderName = "LinkedMeIn";
+		String fromAddress = "linkedmein.project@gmail.com";
+		String senderName = "LinkedMeIn Team";
 		String subject = "LinkedMeIn - Verify your Registration";
 		
 		String content = "Dear [[name]],<br>" +
@@ -91,6 +92,57 @@ public class UserService {
 			
 			return true;
 		}
+	}
+	
+	public User getUserByResetPasswordToken(String token) {
+		return userRepository.findUserByResetPasswordToken(token);
+	}
+	
+	public void updateResetPasswordToken(String token, String email) 
+		throws UsernameNotFoundException {
+		
+		User user = userRepository.findUserByEmail(email);
+		
+		if(user == null) {
+			throw new UsernameNotFoundException("user (" + email + ") not found.");
+		} else {
+		
+			user.setResetPasswordToken(token);
+			userRepository.save(user);
+		}
+	}
+	
+	public void updatePassword(User user, String newPassword) {
+		String encodedPassword = passwordEncoder.encode(newPassword);
+		user.setPassword(encodedPassword);
+		
+		user.setResetPasswordToken(null);
+		userRepository.save(user);
+	}
+	
+	public void sendResetPasswordLink(String email, String token, String siteURL) 
+		throws MessagingException, UnsupportedEncodingException {
+		
+		MimeMessage message = mailSender.createMimeMessage();
+		MimeMessageHelper helper = new MimeMessageHelper(message);
+		
+		helper.setFrom("linkedmein.project@gmail.com", "LinkedMeIn Team");
+		helper.setTo(email);
+		
+		String resetLink = siteURL + "/reset_password?token=" + token;
+		String subject = "LinkedMeIn - link to reset your password";
+		
+		String content = "<p>Dear User,</p>"
+	            + "<p>You have requested to reset your password.</p>"
+	            + "<p>Click the link below to change your password:</p>"
+	            + "<p><a href=\"" + resetLink + "\">Change my password</a></p>"
+	            + "<br>"
+	            + "<p>Ignore this email if you do remember your password, "
+	            + "or you have not made the request.</p>";
+		
+		helper.setSubject(subject);
+		helper.setText(content, true);
+		mailSender.send(message);
 	}
 
 }

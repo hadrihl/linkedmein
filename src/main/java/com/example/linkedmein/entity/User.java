@@ -29,6 +29,9 @@ public class User {
 	
 	private boolean enabled;
 	
+	@Column(name = "reset_password_token", length = 30)
+	private String resetPasswordToken;
+	
 	// Generate Getters and Setters
 	public Integer getId() {
 		return id;
@@ -95,5 +98,11 @@ public class User {
 	}
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
+	}
+	public String getResetPasswordToken() {
+		return resetPasswordToken;
+	}
+	public void setResetPasswordToken(String resetPasswordToken) {
+		this.resetPasswordToken = resetPasswordToken;
 	}
 }
