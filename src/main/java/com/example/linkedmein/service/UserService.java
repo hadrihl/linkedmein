@@ -9,6 +9,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.linkedmein.entity.User;
@@ -20,13 +21,14 @@ import net.bytebuddy.utility.RandomString;
 @Transactional
 public class UserService {
 	
-	private static String siteURL = "http://localhost:8080";
-	
 	@Autowired
 	private UserRepository userRepository;
 	
 	@Autowired
 	private JavaMailSender mailSender;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 	
 	// save/update user object
 	public void saveUser(User user) {
@@ -40,8 +42,11 @@ public class UserService {
 		user.setVerificationCode(randomCode); // set verification code to a user
 		user.setEnabled(false); // set enabled as false
 		
+		String encodedPassword = passwordEncoder.encode(user.getPassword()); // hash the password
+		user.setPassword(encodedPassword); // encoded hash password
+		
 		userRepository.save(user); // temporarily create a new user
-		sendVerificationEmail(user, UserService.siteURL); // let user verify
+		sendVerificationEmail(user, siteURL); // let user verify
 	}
 	
 	private void sendVerificationEmail(User user, String siteURL)

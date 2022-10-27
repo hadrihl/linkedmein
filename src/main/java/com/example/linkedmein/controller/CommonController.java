@@ -60,11 +60,13 @@ public class CommonController {
 		return "thank-you";
 	}
 	
+	// retrieve site url
 	private String getSiteURL(HttpServletRequest request) {
 		String siteURL = request.getRequestURL().toString();
 		return siteURL.replace(request.getServletPath(), "");
 	}
 	
+	// verify user
 	@GetMapping("/verify")
 	public String verifyUser(@Param("code") String code) {
 		if(userService.verify(code)) {
@@ -72,5 +74,11 @@ public class CommonController {
 		} else {
 			return "verify_fail";
 		}
+	}
+	
+	// get dashboard page
+	@GetMapping("/dashboard")
+	public String getDashboardPage() {
+		return "dashboard";
 	}
 }
