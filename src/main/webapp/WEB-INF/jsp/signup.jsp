@@ -11,7 +11,7 @@
   <body>
     <div class="card mt-5" style="width: 20rem; margin: auto;">
         <div class="card-body text-center">
-            <form class="mb-4" action="/process_signup" method="post" modelattribute="user">
+            <form class="mb-4" action="/signup" method="post" modelattribute="user">
             <input type="hidden" name="${_csrf.parameterName}"
 						value="${_csrf.token}" />
             
@@ -32,7 +32,15 @@
                 <div class="form-group d-grid gap-2">
                     <button class="btn btn-success w-100">Sign up with email</button>
                 </div>
-                <footer class="mt-5 text-muted">&copy; 2022. <a href="/">linkedMeIn</a> portal.<br/>
+                
+                <c:if test="${error_string != null}">
+                <div class="mt-2 alert alert-warning alert-dismissible fade show" role="alert">
+  					${error_string}
+  					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>
+				</c:if>
+                
+                <footer class="mt-3 text-muted">&copy; 2022. <a href="/">linkedMeIn</a> portal.<br/>
                     Made with <i class="fa-solid fa-heart"></i> in Penang.<br/>
                     <i class="fa-brands fa-github"></i>
                     <a href="https://github.com/hadrihl/linkedmein"> linkedmein</a>

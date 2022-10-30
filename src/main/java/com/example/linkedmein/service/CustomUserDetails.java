@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.example.linkedmein.entity.User;
 
@@ -48,7 +49,25 @@ public class CustomUserDetails implements UserDetails {
 
 	@Override
 	public boolean isEnabled() {
-		return true;
+		return user.isEnabled();
+	}
+	
+	public void setUsername(String username) {
+		this.user.setUsername(username);
+	}
+	
+	public void setPassword(String password) {
+		BCryptPasswordEncoder passswordEncoder = new BCryptPasswordEncoder();
+		String encodedPassword = passswordEncoder.encode(password);
+		this.user.setPassword(encodedPassword);
+	}
+	
+	public String getEmail() {
+		return user.getEmail();
+	}
+	
+	public void setEmail(String email) {
+		this.user.setEmail(email);
 	}
 
 }
