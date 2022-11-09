@@ -9,33 +9,75 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
   </head>
   <body>
-    <nav class="navbar navbar-expand-sm navbar-light bg-light fixed-top">
-        <div class="container">
-            <span class="navbar-brand mt-1 h1">Linked<span class="text-primary">Me</span>In</span>
+        <nav class="navbar navbar-expand-lg bg-light">
+            <div class="container-fluid">
+                <span class="navbar-brand mt-1 h1">Linked<span class="text-primary">Me</span>In</span>
 
-            <button type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" class="navbar-toggler" 
-            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle Navigation"><span class="navbar-toggler-icon"></span></button>
-    
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item active">
-                        <a href="#" class="nav-link">Home</a>
-                    </li>
-                    <li class="nav-item active">
-                        <a href="/about" class="nav-link">About</a>
-                    </li>
-                    <li class="nav-item active">
-                        <a href="/contact" class="nav-link">Contact</a>
-                    </li>
-                    <li class="nav-item active">
-                        <a href="#" class="nav-link">Find</a>
-                    </li>
-                </ul>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarScroll">
+                    <ul class="navbar-nav me-auto my-2 my-lg-0" style="--bs-scroll-height: 100px;">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="/">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/about">About</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="/contact">Contact</a>
+                        </li>
+                    </ul>
+                    
+                <div class="d-flex">
+                	<c:if test="${not empty pageContext.request.remoteUser}">
+    				<!-- start -->
+    				<ul class="navbar-nav me-2 my-2 my-lg-0" style="--bs-scroll-height: 100px;">
+                    	<li class="nav-item dropdown">
+                        	<a class="nav-link dropdown-toggle me-2" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            	<i class="fa-solid fa-at"></i>
+                                <c:out value="${pageContext.request.remoteUser}" />
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-lg-end bg-light" >
+                                <li>
+                                	<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+                                	<form:form action="${pageContext.request.contextPath}/profile" method="GET"  modelattribute="person">
+                                		<input type="hidden" name="id" value="${person.id}">
+                                		<button type="submit" class="dropdown-item">
+                                			<i class="fa-solid fa-user"></i>
+                                			Profile
+                                		</button>
+                                	</form:form>
+                                </li>
+                                <li><a class="dropdown-item" href="/dashboard">
+                                	<i class="fa-solid fa-table-columns"></i>
+                                	Dashboard</a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                	<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+									<form:form action="${pageContext.request.contextPath}/logout" method="POST">
+    									<button type="submit" class="dropdown-item">
+    										<i class="fa-solid fa-right-from-bracket"></i>
+    										Logout
+    									</button>
+									</form:form>
+                                </li>
+                             </ul>
+                   		</li>
+                    </ul>
+    				<!--  end -->
+					</c:if>
+					
+					<c:if test="${empty pageContext.request.remoteUser}">
+    				<a href="/signin" class="btn btn-primary">Sign in</a>
+					</c:if>                	
+                </div>
+                </div>
             </div>
-
-            <a href="/signin" class="btn btn-primary">Sign in</a>
-        </div>
-    </nav>
+        </nav>
 
     <main>
         <section class="py-5 text-center">

@@ -1,6 +1,8 @@
 package com.example.linkedmein.service;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Collection;
+import java.util.List;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -9,6 +11,11 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -36,23 +43,133 @@ public class UserService {
 		userRepository.save(user);
 	}
 	
-	public void register(User user, String siteURL) 
-		throws MessagingException, UnsupportedEncodingException {
+	public long countRegisteredUser() {
+		return userRepository.count();
+	}
+	
+	public List<User> search(String keyword) {
+		return userRepository.search(keyword);
+	}
+	
+	public void updateUserProfile(User tmp) {
+		User user = userRepository.findById(tmp.getId()).get(); // get user by id
+		
+		// update necessary information
+		user.setFirstname(tmp.getFirstname());
+		user.setLastname(tmp.getLastname());
+		user.setBio(tmp.getBio());
+		user.setCompany(tmp.getCompany());
+		user.setCity(tmp.getCity());
+		user.setCountry(tmp.getCountry());
+		user.setImg(tmp.getImg());
+		
+		// save into database
+		userRepository.save(user);
+		
+	}
+	
+	public void updateUsername(Integer id, String username) {
+		//Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		//System.out.println("before principal name = " + authentication.getName());
+		
+		User user = userRepository.findById(id).get();
+		user.setUsername(username);
+		userRepository.save(user);
+		
+		//System.out.println("after principal name = " + authentication.getName());
+	}
+	
+	public void updatePassword(String newPassword, Integer userId) {
+		User user = userRepository.findById(userId).get();
+		String encodedPassword = passwordEncoder.encode(newPassword);
+		user.setPassword(encodedPassword);
+		
+		userRepository.save(user);
+	}
+	
+	public void updateEmail(User user, String email, String siteURL)
+			throws MessagingException, UnsupportedEncodingException {
+		user.setEmail(email);
 		
 		String randomCode = RandomString.make(64); // generate random verification code
 		user.setVerificationCode(randomCode); // set verification code to a user
 		user.setEnabled(false); // set enabled as false
 		
+		String toAddress = user.getEmail();
+		String fromAddress = "linkedmein.project@gmail.com";
+		String senderName = "LinkedMeIn Team";
+		String subject = "LinkedMeIn - Verify your Email";
+		
+		String content = "Dear [[name]],<br>" +
+						"Please click the link below to verify your email: <br>" + 
+						"<h3><a href=\"[[URL]]\" target=\"_self\">VERIFY</a></h3>" + 
+						"Thank you,<br>" + 
+						"LinkedMeIn";
+		
+		MimeMessage message = mailSender.createMimeMessage();
+		MimeMessageHelper helper = new MimeMessageHelper(message);
+		
+		helper.setFrom(fromAddress, senderName);
+		helper.setTo(toAddress);
+		helper.setSubject(subject);
+		
+		content = content.replace("[[name]]", user.getUsername());
+		String verifyURL = siteURL + "/verify?code=" + user.getVerificationCode();
+		
+		content = content.replace("[[URL]]", verifyURL);
+		helper.setText(content, true);
+		
+		mailSender.send(message);
+	}
+	
+	public void updateInformation(Integer userid, User tmp) {
+		User user = userRepository.findById(userid).get();
+		
+		user.setFirstname(tmp.getFirstname());
+		user.setLastname(tmp.getLastname());
+		user.setBio(tmp.getBio());
+		user.setCompany(tmp.getCompany());
+		user.setCity(tmp.getCity());
+		user.setCountry(tmp.getCountry());
+		user.setImg(tmp.getImg());
+		
+		userRepository.save(user);
+	}
+	
+	public User getUserById(Integer user_id) {
+		return userRepository.findById(user_id).get();
+	}
+	
+	public User getUserByUsername(String username) {
+		return userRepository.findUserByUsername(username);
+	}
+	
+	public User getUserByEmail(String email) {
+		return userRepository.findUserByEmail(email);
+	}
+	
+	// return all users
+	public List<User> getAllUsers() {
+		return userRepository.findAll();
+	}
+	
+	public void register(User user, String siteURL) 
+		throws MessagingException, UnsupportedEncodingException {
+		
+		String randomCode = RandomString.make(64); // generate random verification code
+		//user.setVerificationCode(randomCode); // set verification code to a user
+		//user.setEnabled(false); // set enabled as false
+		
 		String encodedPassword = passwordEncoder.encode(user.getPassword()); // hash the password
 		user.setPassword(encodedPassword); // encoded hash password
 		
 		userRepository.save(user); // temporarily create a new user
-		sendVerificationEmail(user, siteURL); // let user verify
+		//sendVerificationEmail(user, siteURL); // let user verify
 	}
 	
 	private void sendVerificationEmail(User user, String siteURL)
 		throws MessagingException, UnsupportedEncodingException {
-		
+	
 		String toAddress = user.getEmail();
 		String fromAddress = "linkedmein.project@gmail.com";
 		String senderName = "LinkedMeIn Team";

@@ -34,6 +34,13 @@
                     <button type="submit" class="btn btn-success w-100"> Sign in with Email</button>
                     
                     <a href="/forgot_password">Forgot your password?</a>
+                    
+                    <c:if test="${error_string != null}">
+                		<div class="mt-2 alert alert-warning alert-dismissible fade show" role="alert">
+  							${error_string}
+  							<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+						</div>
+					</c:if>
                 </div>
                 <footer class="mt-5 text-muted">&copy; 2022. <a href="/">linkedMeIn</a> portal.<br/>
                     Made with <i class="fa-solid fa-heart"></i> in Penang.<br/>

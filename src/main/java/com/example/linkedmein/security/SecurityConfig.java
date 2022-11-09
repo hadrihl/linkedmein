@@ -43,10 +43,8 @@ public class SecurityConfig {
 			.authorizeHttpRequests()
 				.antMatchers(HttpMethod.GET, "/").permitAll()
 				.antMatchers(HttpMethod.GET, "/assets/**").permitAll()
-				.antMatchers(HttpMethod.GET, "/about").permitAll()
-				.antMatchers(HttpMethod.GET, "/contact").permitAll()
 				.antMatchers(HttpMethod.GET, "/signup").permitAll()
-				.antMatchers(HttpMethod.POST, "/process_signup").permitAll()
+				.antMatchers(HttpMethod.POST, "/signup").permitAll()
 				.antMatchers(HttpMethod.GET, "/verify").permitAll()
 				.antMatchers(HttpMethod.GET, "/forgot_password").permitAll()
 				.antMatchers(HttpMethod.POST, "/forgot_password").permitAll()
@@ -60,10 +58,12 @@ public class SecurityConfig {
 				.loginProcessingUrl("/login")
 				.usernameParameter("email")
 				.defaultSuccessUrl("/dashboard")
+				.failureUrl("/signin-error")
 				.permitAll()
 				.and()
 			.logout()
-				.invalidateHttpSession(true)
+				.logoutSuccessUrl("/signin")
+				.deleteCookies("JSESSIONID")
 				.permitAll();
 		
 		return http.build();

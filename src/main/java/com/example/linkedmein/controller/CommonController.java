@@ -1,6 +1,7 @@
 package com.example.linkedmein.controller;
 
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
@@ -8,14 +9,25 @@ import javax.servlet.http.HttpServletRequest;
 import org.aspectj.apache.bcel.classfile.Utility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.annotation.CurrentSecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.example.linkedmein.entity.User;
+import com.example.linkedmein.service.CustomUserDetails;
 import com.example.linkedmein.service.UserService;
 
 import net.bytebuddy.utility.RandomString;
@@ -26,28 +38,42 @@ public class CommonController {
 	@Autowired
 	private UserService userService;
 	
-	// get homepage
-	@GetMapping("/")
-	public String getHomePage() {
-		return "index";
-	}
+		// get homepage
+		@GetMapping("/")
+		public String getHomePage(Model model, @CurrentSecurityContext(expression = "authentication?.name") String username) {
+			User loggedInUser = userService.getUserByUsername(username);
+			model.addAttribute("person", loggedInUser);
+			return "index";
+		}
 	
 	// get about page
 	@GetMapping("/about")
-	public String getAboutPage() {
+	public String getAboutPage(Model model, @CurrentSecurityContext(expression = "authentication?.name") String username) {
+		User loggedInUser = userService.getUserByUsername(username);
+		model.addAttribute("person", loggedInUser);
 		return "about";
 	}
 	
 	// get contact page
 	@GetMapping("/contact")
-	public String getContactPage() {
+	public String getContactPage(Model model, @CurrentSecurityContext(expression = "authentication?.name") String username) {
+		User loggedInUser = userService.getUserByUsername(username);
+		model.addAttribute("person", loggedInUser);
 		return "contact";
 	}
 	
 	// get signin page
 	@GetMapping("/signin")
-	public String getSignInPage() {
+	public String getSignInPage(Model model) {
 		return "signin";
+	}
+	
+	@GetMapping("/signin-error")
+	public ModelAndView getSigninErrorPage(Model model) {
+		System.out.print("failure signin!!!");
+		ModelAndView mv = new ModelAndView("signin");
+		mv.addObject("error_string", "Wrong email/password. Please try again.");
+		return mv;
 	}
 	
 	// get signup page
@@ -57,8 +83,19 @@ public class CommonController {
 	}
 	
 	// register new user
-	@PostMapping("/process_signup")
-	public String registerNewUser(Model model, @ModelAttribute("user") User user, HttpServletRequest request) throws UnsupportedEncodingException, MessagingException {
+	@PostMapping("/signup")
+	public String registerNewUser(Model model, @ModelAttribute("user") User user, HttpServletRequest request) 
+			throws UnsupportedEncodingException, MessagingException {
+		
+		// check if username/email already exists
+		if(userService.getUserByUsername(user.getUsername()) != null) {
+			model.addAttribute("error_string", "Username already exists!");
+			return "signup";
+		} else if(userService.getUserByEmail(user.getEmail()) != null) {
+			String error_string = "Email already exists!";
+			model.addAttribute("error_string", error_string);
+			return "signup";
+		}
 		
 		userService.register(user, getSiteURL(request));
 		return "thank-you";
@@ -82,8 +119,157 @@ public class CommonController {
 	
 	// get dashboard page
 	@GetMapping("/dashboard")
-	public String getDashboardPage() {
+	public String getDashboardPage(Model model, @AuthenticationPrincipal CustomUserDetails loggedinUser) {
+		model.addAttribute("username", loggedinUser.getUsername());
+		
+		User user = userService.getUserByUsername(loggedinUser.getUsername());
+		model.addAttribute("user_id", user.getId());
+		
+		List<User> users = userService.getAllUsers();
+		model.addAttribute("users", users);	
+		
+		long count = userService.countRegisteredUser();
+		model.addAttribute("count", count);
+		
 		return "dashboard";
+	}
+	
+	// get profile page
+	@GetMapping("/profile")
+	public String getProfilePage(Model model, HttpServletRequest request,
+			@AuthenticationPrincipal CustomUserDetails loggedinUser) {
+		model.addAttribute("username", loggedinUser.getUsername());
+		
+		Integer user_id = Integer.parseInt(request.getParameter("id"));
+		User user = userService.getUserById(user_id);
+		model.addAttribute("user_id", user.getId());
+		model.addAttribute("user", user);
+		
+		model.addAttribute("email", user.getEmail());
+		return "profile";
+	}
+	
+	@PostMapping("/update-username")
+	public String updateUsername(Model model, HttpServletRequest request, 
+			@AuthenticationPrincipal CustomUserDetails loggedinUser) {
+		
+		// get input username & id
+		String oldUsername = loggedinUser.getUsername();
+		String newUsername = request.getParameter("username");
+		Integer userId = Integer.parseInt(request.getParameter("id"));
+
+		// if new username already exists
+		if(userService.getUserByUsername(newUsername) != null) {
+			model.addAttribute("username", loggedinUser.getUsername());
+			User user = userService.getUserById(userId);
+			
+			if(oldUsername.equals(newUsername)) {
+				model.addAttribute("error_string_success", "Hola!! username <b>" + newUsername + "</b> is still awesome!");
+			} else {
+				model.addAttribute("error_string_warning", "Ops!! username <b>" + newUsername + "</b> already exists! Choose a new one then");
+			}
+			
+			model.addAttribute("user_id", user.getId());
+			model.addAttribute("user", user);
+			model.addAttribute("email", user.getEmail());
+			return "profile";
+		}
+		
+		// if username not exists, change username
+		loggedinUser.setUsername(newUsername);
+		userService.updateUsername(userId, newUsername);
+		
+		model.addAttribute("username", loggedinUser.getUsername());
+		User user = userService.getUserById(userId);
+		model.addAttribute("user_id", user.getId());
+		model.addAttribute("user", user);
+		model.addAttribute("email", user.getEmail());
+		model.addAttribute("error_string_success", "Username <b>" + newUsername + "</b> successfully updated.");
+		
+		return "profile";
+	}
+	
+	@PostMapping("/update-password")
+	public String updatePassword(Model model, HttpServletRequest request, 
+			@AuthenticationPrincipal CustomUserDetails loggedinUser) {
+		
+		String oldpassword = request.getParameter("oldpassword");
+		String newpassword = request.getParameter("password");
+		Integer userId = Integer.parseInt(request.getParameter("id"));
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		
+		if(passwordEncoder.matches(oldpassword, loggedinUser.getPassword()) == true) {
+			//System.out.println("old password typed-in matched with password on system!");
+			userService.updatePassword(newpassword, userId);
+			
+			model.addAttribute("username", loggedinUser.getUsername());
+			User user = userService.getUserById(userId);
+			model.addAttribute("user_id", user.getId());
+			model.addAttribute("user", user);
+			model.addAttribute("email", user.getEmail());
+			model.addAttribute("error_string_success", "Password is successfully updated.");
+			return "profile";
+			
+		} else {
+			//System.out.println("password not match!!! no update");
+			model.addAttribute("error_string_warning", "Old password entered not match!");
+			model.addAttribute("username", loggedinUser.getUsername());
+			User user = userService.getUserById(userId);
+			model.addAttribute("user_id", user.getId());
+			model.addAttribute("user", user);
+			model.addAttribute("email", user.getEmail());
+			return "profile";
+		}
+	}
+	
+	@PostMapping("/update-email")
+	public String updateEmail(Model model, HttpServletRequest request, @AuthenticationPrincipal CustomUserDetails loggedinUser)
+		throws MessagingException, UnsupportedEncodingException {
+		Integer userId = Integer.parseInt(request.getParameter("id"));
+		String email = request.getParameter("email");
+		
+		if(userService.getUserByEmail(email) == null) {
+			User user = userService.getUserById(userId);
+			userService.updateEmail(user, email, getSiteURL(request));
+			
+			model.addAttribute("error_string_success", "Email is successfully updated. Check and verify your email before you signin again.");
+			loggedinUser.setEmail(email);
+			model.addAttribute("username", loggedinUser.getUsername());
+			model.addAttribute("user_id", user.getId());
+			model.addAttribute("user", user);
+			model.addAttribute("email", user.getEmail());
+			return "profile";
+			
+		} else {
+			if(email.equals(loggedinUser.getEmail())) {
+				model.addAttribute("error_string_success", "Awesome! You're going to use the same email!");
+			} else {
+				model.addAttribute("error_string_warning", "Email already existed. Type new valid email.");
+			}
+			
+			model.addAttribute("username", loggedinUser.getUsername());
+			User user = userService.getUserById(userId);
+			model.addAttribute("user_id", user.getId());
+			model.addAttribute("user", user);
+			model.addAttribute("email", user.getEmail());
+			return "profile";
+		}
+	}
+	
+	@PostMapping("/update-information")
+	public String updateInformation(Model model, HttpServletRequest request, 
+			@ModelAttribute("user") User tmp, @AuthenticationPrincipal CustomUserDetails loggedinUser) {
+		Integer userId = Integer.parseInt(request.getParameter("id"));
+		
+		userService.updateInformation(userId, tmp);
+		
+		model.addAttribute("username", loggedinUser.getUsername());
+		User user = userService.getUserById(userId);
+		model.addAttribute("user", user);
+		model.addAttribute("user_id", user.getId());
+		model.addAttribute("email", user.getEmail());
+		model.addAttribute("error_string_success", "User's profile information are successfully updated.");
+		return "profile";
 	}
 	
 	// forgot password (GET)
@@ -147,5 +333,23 @@ public class CommonController {
 		}
 		
 		return "reset_success";
+	}
+	
+	// search public profile by keyword
+	@PostMapping("/dashboard")
+	public String search(Model model, HttpServletRequest request, @AuthenticationPrincipal CustomUserDetails loggedinUser) {
+		model.addAttribute("username", loggedinUser.getUsername());
+		
+		CustomUserDetails user = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		User person = userService.getUserByUsername(user.getUsername());
+		model.addAttribute("person", person.getId());
+		
+		String keyword = request.getParameter("keyword");
+		List<User> users = userService.search(keyword);
+		Integer count = users.size();
+		
+		model.addAttribute("count", count);
+		model.addAttribute("users", users);
+		return "dashboard";
 	}
 }
