@@ -55,6 +55,10 @@
                                 	<i class="fa-solid fa-table-columns"></i>
                                 	Dashboard</a>
                                 </li>
+                                <li><a class="dropdown-item" href="/jobs">
+                                	<i class="fa-solid fa-table-columns"></i>
+                                	Jobs</a>
+                                </li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
                                 	<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
