@@ -39,4 +39,34 @@ public class UserRepositoryTest {
 		
 		assertThat(existUser.getId()).isEqualTo(savedUser.getId());
 	}
+	
+	@Test
+	public void test_get_user_by_email() {
+		User user = new User();
+		user.setUsername("foo");
+		user.setEmail("foo@example.com");
+
+		BCryptPasswordEncoder pe = new BCryptPasswordEncoder();
+		user.setPassword(pe.encode("password"));
+		
+		User savedUser = userRepository.save(user);
+		User existedUser = userRepository.findUserByEmail("foo@example.com");
+		
+		assertThat(existedUser.getEmail()).isEqualTo(savedUser.getEmail());
+	}
+	
+	@Test
+	public void test_get_user_by_username() {
+		User user = new User();
+		user.setUsername("foo");
+		user.setEmail("foo@example.com");
+
+		BCryptPasswordEncoder pe = new BCryptPasswordEncoder();
+		user.setPassword(pe.encode("password"));
+		
+		User savedUser = userRepository.save(user);
+		User existedUser = userRepository.findUserByUsername("foo");
+		
+		assertThat(existedUser.getUsername()).isEqualTo(savedUser.getUsername());
+	}
 }

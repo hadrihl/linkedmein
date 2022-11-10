@@ -19,6 +19,11 @@ public class PostService {
 	@Autowired
 	private PostRepository postRepository;
 	
+	// default constructor
+	public PostService(PostRepository postRepository) {
+		this.postRepository = postRepository;
+	}
+	
 	public List<Post> getAllJobs() {
 		return postRepository.findAll();
 	}
@@ -34,6 +39,15 @@ public class PostService {
 		post.setStatus(true);
 		
 		postRepository.save(post);
+	}
+	
+	public Post savePost(Post post, User user) {
+		post.setCreatedOn(LocalDateTime.now());
+		post.setUpdatedOn(LocalDateTime.now());
+		post.setUser(user);
+		post.setStatus(true);
+		
+		return postRepository.save(post);
 	}
 	
 	public List<Post> findAllPostByUserId(Integer user_id) {
