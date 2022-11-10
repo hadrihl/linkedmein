@@ -38,6 +38,10 @@ public class UserService {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
+	public UserService(UserRepository userRepo) {
+		this.userRepository = userRepo;
+	}
+	
 	// save/update user object
 	public void saveUser(User user) {
 		userRepository.save(user);

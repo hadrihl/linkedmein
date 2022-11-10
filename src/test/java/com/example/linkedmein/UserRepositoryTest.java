@@ -8,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.annotation.Rollback;
 
 import com.example.linkedmein.entity.User;
@@ -15,24 +16,27 @@ import com.example.linkedmein.repository.UserRepository;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-@Rollback(false)
+@Rollback(true)
 public class UserRepositoryTest {
 	
 	@Autowired
-	private UserRepository repo;
+	private UserRepository userRepository;
 	
 	@Autowired
-	private TestEntityManager entityManager;
+	private TestEntityManager em;
 	
 	@Test
-	public void testCreateNewUser() {
+	public void test_user_creation() {
 		User user = new User();
-		user.setUsername("test-admin");
-		user.setEmail("admin@example.com");
-		user.setPassword("password");
+		user.setUsername("foo");
+		user.setEmail("foo@example.com");
+
+		BCryptPasswordEncoder pe = new BCryptPasswordEncoder();
+		user.setPassword(pe.encode("password"));
 		
-		user = entityManager.persistAndFlush(user);
+		User savedUser = userRepository.save(user);
+		User existUser = em.find(User.class, savedUser.getId());
 		
-		assertThat(repo.findById(user.getId()).get()).isEqualTo(user);
+		assertThat(existUser.getId()).isEqualTo(savedUser.getId());
 	}
 }
