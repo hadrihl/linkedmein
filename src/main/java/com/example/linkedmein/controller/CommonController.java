@@ -70,7 +70,6 @@ public class CommonController {
 	
 	@GetMapping("/signin-error")
 	public ModelAndView getSigninErrorPage(Model model) {
-		System.out.print("failure signin!!!");
 		ModelAndView mv = new ModelAndView("signin");
 		mv.addObject("error_string", "Wrong email/password. Please try again.");
 		return mv;
@@ -194,7 +193,7 @@ public class CommonController {
 			@AuthenticationPrincipal CustomUserDetails loggedinUser) {
 		
 		String oldpassword = request.getParameter("oldpassword");
-		String newpassword = request.getParameter("password");
+		String newpassword = request.getParameter("newpassword");
 		Integer userId = Integer.parseInt(request.getParameter("id"));
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		
