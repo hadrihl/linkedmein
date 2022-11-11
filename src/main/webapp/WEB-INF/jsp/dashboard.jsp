@@ -7,25 +7,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Dashboard</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
-        <style>
-            .card {
-              width: 330px;
-              height: 560px;
-              border-radius: 12px;
-              box-shadow: 6px 6px 10px #ccc, 6px 6px 20px #ccc;
-              margin-bottom: 50px;
-            }
-      
-            .card img {
-              width: 100%;
-              height: 60%;
-              object-fit: cover;
-            }
-      
-            .card-title {
-              font-size: 16px;
-            }
-        </style>
     </head>
     
     <body>
@@ -129,7 +110,7 @@
 
                 <h2>(<span modelattribute="count">${count}</span>) registered users</h2>
         
-                <div class="row" style="margin-top: 20px;">
+                <div class="row py-4">
                 
                 <c:if test="${empty users}">
                 	<div class="container">
@@ -139,24 +120,23 @@
                 
                 <c:if test="${not empty users}">
                 	<c:forEach var="user" items="${users}">
-                		<div class="col-md-12 col-lg-4 col-sm-3 text-center">
-                			<div class="card">
+                		<div class="col-lg-4 mb-5">
+                			<div class="card" style="width: 19rem;">
                 				<img src="assets/img/${user.img}" class="card-img-top" alt="avatar">
-                				<div class="card-body">
+                				<div class="card-body text-center">
                 					<h4 class="card-title">${user.firstname} ${user.lastname} 
                 						<a href=""><i class="fa-solid fa-circle-check" title="verified"></i></a>
                 					</h4>
-                					<div class="row-cols-md-9">
-                						<i class="fa-brands fa-twitter"></i>
-                          				<i class="fa-brands fa-linkedin"></i>
-                          				<a href="https://www.github.com/hadrihl"><i class="fa-brands fa-github"></i></a>
-                					</div>
+
+                					<i class="fa-brands fa-twitter"></i>
+                          			<i class="fa-brands fa-linkedin"></i>
+                          			<a href="https://www.github.com/hadrihl"><i class="fa-brands fa-github"></i></a>
                 					
                 					<p class="card-text">${user.bio}</p>
                 					<p><i class="fa-sharp fa-solid fa-building"></i> ${user.company} <br> 
                 						${user.city} ${user.country}</p>
                 						
-                					<form class="text-center">
+                					<form>
                           				<a href="#" class="btn btn-outline-primary">Follow</a>
                           				<a href="#" class="btn btn-outline-secondary">Message</a>
                         			</form>
