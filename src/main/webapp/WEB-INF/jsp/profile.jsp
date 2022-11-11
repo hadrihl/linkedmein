@@ -52,7 +52,7 @@
                                 </li>
                                 <li><a class="dropdown-item" href="/jobs">
                                 	<i class="fa-solid fa-table-columns"></i>
-                                	Jobs</a>
+                                	Jobs Posting</a>
                                 </li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
