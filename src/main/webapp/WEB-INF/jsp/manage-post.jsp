@@ -150,8 +150,6 @@
 
         <section>
             <div class="container py-4 mb-5">
-
-                <h2>(<span modelattribute="count">${count}</span>) jobs available</h2>
         
                 <div class="row" style="margin-top: 20px;">
                 
