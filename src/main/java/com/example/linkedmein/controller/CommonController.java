@@ -211,7 +211,7 @@ public class CommonController {
 			
 		} else {
 			//System.out.println("password not match!!! no update");
-			model.addAttribute("error_string_warning", "Old password entered not match!");
+			model.addAttribute("error_string_warning", "Old password entered not match! Please try again.");
 			model.addAttribute("username", loggedinUser.getUsername());
 			User user = userService.getUserById(userId);
 			model.addAttribute("user_id", user.getId());
