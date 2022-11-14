@@ -82,9 +82,9 @@
         </section>
 
         <section>
-            <div class="container py-4 mb-5">
+            <div class="container py-4 mb-5" style="margin: auto;">
         
-                <div class="row" style="margin-top: 20px;">
+                <div class="row justify-content-center" style="margin-top: 20px;">
                 
                 <c:if test="${empty jobs}">
                 	<div class="container">
@@ -92,55 +92,32 @@
                 	</div>
                 </c:if>
                 
-                
-                <div class="card py-5">
-                	<c:if test="${not empty jobs}">
-                	<table class="table .table-responsive .w-auto">
-  					<thead>
-    					<tr>
-      						<th scope="col" style="width: 5%;">#</th>
-      						<th scope="col" style="width: 50%;">Post</th>
-      						<th scope="col" style="width: 10%;">#status</th>
-      						<th scope="col" style="width: 10%;">#edit/update</th>
-      						<th scope="col" style="width: 10%;">#delete</th>
-    					</tr>
-  					</thead>
-  					<tbody>
-                	<c:forEach var="job" items="${jobs}" varStatus="row">
-                		<!-- table row for content here -->
-                		<tr>
-      						<th scope="row">${row.index+1 }</th>
-      						
-      						<td><strong>${job.position}</strong>, ${job.company}</td>
-      						
-      						<td>
-      							
-  								<c:if test="${job.status eq true }">
-  									<select class="form-select bg-success bg-opacity-10" aria-label="Default select example">
-  									<option selected class="greenColor">Available</option>
-  								</c:if>
-  								<c:if test="${job.status eq false }">
-  									<select class="form-select bg-danger bg-opacity-10 text-muted" aria-label="Default select example">
-  									<option selected class="redColor">Closed</option>
- 	 							</c:if>
-								</select>
-      						</td>
-      						
-      						<td><a href="/edit-post?id=${job.id }" class="btn btn-secondary">Edit</a></td>
-      						
-      						<td>
-      							<form:form action="/delete-post?id=${job.id }" method="POST">
-      							<button class="btn btn-danger">Delete</button>
-      							</form:form>
-      						</td>
-    					</tr>
-                		<!-- end of row -->	
-                	</c:forEach>
-                	</tbody>
-                	</table>
-                	</c:if>
+                <c:if test="${not empty jobs}">
+                <c:forEach var="job" items="${jobs}" varStatus="row">
+                <div class="card col-lg-4 mb-3 me-2" style="width: 18rem;">
+                	<div class="card-body">
+                		<p class="position-relative">
+                			<span class="position-absolute top-0 start-0 translate-middle badge text-bg-light">#${row.index+1 }</span>
+                			
+                			<c:if test="${job.status == true}">
+                			<span class="position-absolute top-0 start-100 translate-middle p-2 bg-success border border-light rounded-circle">
+                			</c:if>
+                			<c:if test="${job.status == false}">
+                			<span class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle">
+                			</c:if>
+                		</p>
+                		
+                		<h5 class="card-title pt-2">${job.position }</h5>
+                		<h6 class="card-subtitle text-muted">${job.company }</h6>
+                		<p class="card-text"></p>
+                	</div>
+                	<div class="card-footer" style="background-color: transparent; border-top: 0;">
+                		<a href="/edit-post?id=${job.id}" class="btn btn-secondary btn-sm">Edit</a>
+    					<a href="/delete-post?id=${job.id}" class="btn btn-danger btn-sm">Delete</a>
+                	</div>
                 </div>
-                
+                </c:forEach>
+                </c:if>          
 
                 </div>
               </div>
