@@ -3,10 +3,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <html>
     <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <%@ include file="components/meta.jsp" %> 
         <title>Jobs Opportunities</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+        <%@ include file="components/head.jsp" %> 
         <style>
             .card {
               max-width: 100vw !important;
@@ -29,73 +28,7 @@
     </head>
     
     <body>
-        <nav class="navbar navbar-expand-lg bg-light">
-            <div class="container-fluid">
-                <span class="navbar-brand mt-1 h1">Linked<span class="text-primary">Me</span>In</span>
-
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <div class="collapse navbar-collapse" id="navbarScroll">
-                    <ul class="navbar-nav me-auto my-2 my-lg-0" style="--bs-scroll-height: 100px;">
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="/">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/about">About</a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link" href="/contact">Contact</a>
-                        </li>
-                    </ul>
-                    
-                <div class="d-flex">
-                	<c:if test="${not empty pageContext.request.remoteUser}">
-    				<!-- start -->
-    				<ul class="navbar-nav me-2 my-2 my-lg-0" style="--bs-scroll-height: 100px;">
-                    	<li class="nav-item dropdown">
-                        	<a class="nav-link dropdown-toggle me-2" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            	<i class="fa-solid fa-at"></i>
-                                <c:out value="${username}" />
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-lg-end bg-light" >
-                                <li><a class="dropdown-item" href="/profile?id=${user_id}" modelattribute="user_id">
-                                	<i class="fa-solid fa-user"></i>
-                                	Profile</a>
-                                </li>
-                                <li><a class="dropdown-item" href="/dashboard">
-                                	<i class="fa-solid fa-table-columns"></i>
-                                	Dashboard</a>
-                                </li>
-                                <li><a class="dropdown-item" href="/jobs">
-                                	<i class="fa-solid fa-table-columns"></i>
-                                	Jobs Posting</a>
-                                </li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li>
-                                	<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-									<form:form action="${pageContext.request.contextPath}/logout" method="POST">
-    									<button type="submit" class="dropdown-item">
-    										<i class="fa-solid fa-right-from-bracket"></i>
-    										Logout
-    									</button>
-									</form:form>
-                                </li>
-                             </ul>
-                   		</li>
-                    </ul>
-    				<!--  end -->
-					</c:if>
-					
-					<c:if test="${empty pageContext.request.remoteUser}">
-    				<a href="/signin" class="btn btn-primary">Sign in</a>
-					</c:if>                	
-                </div>
-                </div>
-            </div>
-        </nav>
+        <%@ include file="components/navbar.jsp" %> 
         
         <!-- Alert error message handling -->
     	<c:if test="${error_string_warning != null}">
@@ -209,31 +142,13 @@
               </div>
         </section>
 
-        <footer class="py-5 bg-light text-muted">
-            <div class="container">
-              <div class="row">
-                <div class="col-8 d-flex justify-content-start">
-                  <span>&copy; 2022. <a href="#">LinkedMeIn</a> portal.<br/>
-                    Made with <i class="fa-solid fa-heart"></i> in Penang.<br/>
-                    <i class="fa-brands fa-github"></i>
-                    <a href="https://github.com/hadrihl/linkedmein"> linkedmein</a>
-                  </span>
-                </div>
-      
-                <div class="col-4 d-flex justify-content-end">
-                  <a href="#" class="me-2">Sitemap</a>
-                  <a href="#">Policy</a>
-                </div>
-              </div>
-            </div>
-        </footer>
+        <%@ include file="components/footer.jsp" %> 
 
 		<script>
 			setTimeout(function() {
         		bootstrap.Alert.getOrCreateInstance(document.querySelector(".alert")).close();
     		}, 3000)
 		</script>
-        <script src="https://kit.fontawesome.com/e19fcdf015.js" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+     
     </body>
 </html>

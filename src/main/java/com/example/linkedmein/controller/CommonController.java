@@ -1,6 +1,7 @@
 package com.example.linkedmein.controller;
 
 import java.io.UnsupportedEncodingException;
+import java.security.Principal;
 import java.util.List;
 
 import javax.mail.MessagingException;
@@ -40,25 +41,37 @@ public class CommonController {
 	
 		// get homepage
 		@GetMapping("/")
-		public String getHomePage(Model model, @CurrentSecurityContext(expression = "authentication?.name") String username) {
-			User loggedInUser = userService.getUserByUsername(username);
-			model.addAttribute("person", loggedInUser);
+		public String getHomePage(Model model, @AuthenticationPrincipal CustomUserDetails loggedinUser) {
+			if(loggedinUser != null) {
+				model.addAttribute("username", loggedinUser.getUsername());
+				model.addAttribute("user_id", userService.getUserByUsername(loggedinUser.getUsername()).getId());
+			}
 			return "index";
 		}
 	
 	// get about page
 	@GetMapping("/about")
-	public String getAboutPage(Model model, @CurrentSecurityContext(expression = "authentication?.name") String username) {
-		User loggedInUser = userService.getUserByUsername(username);
-		model.addAttribute("person", loggedInUser);
-		return "about";
+	public String getAboutPage(Model model, @AuthenticationPrincipal CustomUserDetails loggedinUser) 
+		throws Exception {
+		
+		try {
+			model.addAttribute("username", loggedinUser.getUsername());
+			model.addAttribute("user_id", userService.getUserByUsername(loggedinUser.getUsername()).getId());
+			return "about";
+		} catch (Exception e) {
+			return e.getMessage();
+		}
+		
+		
 	}
 	
 	// get contact page
 	@GetMapping("/contact")
-	public String getContactPage(Model model, @CurrentSecurityContext(expression = "authentication?.name") String username) {
-		User loggedInUser = userService.getUserByUsername(username);
-		model.addAttribute("person", loggedInUser);
+	public String getContactPage(Model model, @AuthenticationPrincipal CustomUserDetails loggedinUser) {
+		if(loggedinUser != null) {
+			model.addAttribute("username", loggedinUser.getUsername());
+			model.addAttribute("user_id", userService.getUserByUsername(loggedinUser.getUsername()).getId());
+		}
 		return "contact";
 	}
 	
