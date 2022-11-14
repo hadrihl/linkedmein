@@ -162,7 +162,7 @@
                 
                 <div class="card py-5">
                 	<c:if test="${not empty jobs}">
-                	<table class="table">
+                	<table class="table .table-responsive .w-auto">
   					<thead>
     					<tr>
       						<th scope="col" style="width: 5%;">#</th>
