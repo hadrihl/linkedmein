@@ -107,8 +107,8 @@
                 			</c:if>
                 		</p>
                 		
-                		<h5 class="card-title pt-2">${job.position }</h5>
-                		<h6 class="card-subtitle text-muted">${job.company }</h6>
+                		<h5 class="card-title pt-2">${job.position}</h5>
+                		<h6 class="card-subtitle text-muted">${job.company}</h6>
                 		<p class="card-text"></p>
                 	</div>
                 	<div class="card-footer" style="background-color: transparent; border-top: 0;">
@@ -118,9 +118,30 @@
                 				<a href="/edit-post?id=${job.id}" class="btn btn-secondary btn-sm">Edit</a>
                 			</div>
                 			<div class="col-sm-4">
-                				<form:form action="/delete-post?id=${job.id}" method="post">
-    							<button type="submit" class="btn btn-danger btn-sm">Delete</button>
-    							</form:form>
+    							<button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#delete${job.id}Modal">Delete</button>
+								
+    							<!-- Modal -->
+								<div class="modal fade" id="delete${job.id}Modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+								  <div class="modal-dialog">
+								    <div class="modal-content">
+								      <div class="modal-header">	
+								        <h1 class="modal-title fs-5" id="exampleModalLabel">Delete this post?</h1>
+								        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+								      </div>
+								      <div class="modal-body">
+								      	<h5 class="card-title pt-2">${job.position}</h5>
+                						<h6 class="card-subtitle text-muted">${job.company }</h6>
+								      </div>
+								      <div class="modal-footer">
+								        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+								        
+								        <form:form action="/delete-post?id=${job.id}" method="post">
+								        <button type="submit" class="btn btn-danger">Delete</button>
+								        </form:form>
+								      </div>
+								    </div>
+								  </div>
+								</div>
                 			</div>
                 		</div>
 
