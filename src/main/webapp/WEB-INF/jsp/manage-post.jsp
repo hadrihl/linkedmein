@@ -114,10 +114,10 @@
                 	<div class="card-footer" style="background-color: transparent; border-top: 0;">
                 		
                 		<div class="row">
-                			<div class="col-sm-2 me-1">
+                			<div class="col-2 me-1">
                 				<a href="/edit-post?id=${job.id}" class="btn btn-secondary btn-sm">Edit</a>
                 			</div>
-                			<div class="col-sm-4">
+                			<div class="col-4">
     							<button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#delete${job.id}Modal">Delete</button>
 								
     							<!-- Modal -->
