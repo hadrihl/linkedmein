@@ -44,11 +44,11 @@
   			<div class="form-group mb-5">
   				<select class="form-select" name="status" aria-label="Default select example">
   					<c:if test="${job.status eq true }">
-  						<option selected>Available</option>
+  						<option selected value="1">Available</option>
   						<option value="0">Closed</option>
   					</c:if>
   					<c:if test="${job.status eq false }">
-  						<option selected>Closed</option>
+  						<option selected value="0">Closed</option>
   					<option value="1">Available</option>
   					</c:if>
 				</select>
