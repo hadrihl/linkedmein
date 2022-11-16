@@ -112,8 +112,18 @@
                 		<p class="card-text"></p>
                 	</div>
                 	<div class="card-footer" style="background-color: transparent; border-top: 0;">
-                		<a href="/edit-post?id=${job.id}" class="btn btn-secondary btn-sm">Edit</a>
-    					<a href="/delete-post?id=${job.id}" class="btn btn-danger btn-sm">Delete</a>
+                		
+                		<div class="row">
+                			<div class="col-sm-2 me-1">
+                				<a href="/edit-post?id=${job.id}" class="btn btn-secondary btn-sm">Edit</a>
+                			</div>
+                			<div class="col-sm-4">
+                				<form:form action="/delete-post?id=${job.id}" method="post">
+    							<button type="submit" class="btn btn-danger btn-sm">Delete</button>
+    							</form:form>
+                			</div>
+                		</div>
+
                 	</div>
                 </div>
                 </c:forEach>
