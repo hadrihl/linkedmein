@@ -114,7 +114,7 @@
 							<!-- endof Modal -->
 							
 							<div class="card-footer text-center text-muted">
-								<small><time class="timeago" datetime=${job.updatedOn}></time></small>
+								<small>Last updated: <time class="timeago" datetime=${job.updatedOn}></time></small>
 							</div>
                 				
                 		</div>
