@@ -9,21 +9,13 @@
         <style>
             .card {
               max-width: 100vw !important;
-              height: 18rem;
               border-radius: 12px;
-              box-shadow: 6px 6px 10px #ccc, 6px 6px 20px #ccc;
               margin-bottom: 50px;
             }
       
             .card-title {
               font-size: 16px;
             }
-            
-            .ui-accordion .ui-accordion-content {
-  				height :auto !important;
-  				padding: 0px;
-  				overflow: visible !important;  
-			}
         </style>
     </head>
     
@@ -68,7 +60,7 @@
         </section>
 
         <section>
-            <div class="container py-4 mb-5" style="position: relative;">
+            <div class="container py-4 mb-5">
 
                 <h2>(<span modelattribute="count">${count}</span>) jobs available</h2>
         
@@ -82,14 +74,14 @@
                 
                 <c:if test="${not empty jobs}">
                 <c:forEach var="job" items="${jobs}" varStatus="row">
-                	<div class="col-md-12 col-lg-4 col-sm-3">
+                	<div class="col-lg-4">
                 		<div class="card">
                 			<div class="card-body text-center">
                 				<h4 class="card-title">${job.position}
                 					<a href=""><i class="fa-solid fa-circle-check" title="verified"></i></a>
                 				</h4>
                 					
-                				<div class="row-cols-md-9">
+                				<div class="row">
                           			<p class="card-text">*Salary (MYR): ${job.salary}</p>
                 				</div>
 
@@ -120,19 +112,11 @@
   								</div>
 							</div>
 							<!-- endof Modal -->
+							
+							<div class="card-footer text-center text-muted">
+								<small><time class="timeago" datetime=${job.updatedOn}></time></small>
+							</div>
                 				
-                			<div class="accordion" id="accordionExample">
-  								<div class="accordion-item">
-    								<h2 class="accordion-header" id="heading${row.index }">
-      								<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${row.index }" aria-expanded="true" aria-controls="collapse${row.index }">
-        								<small>
-        									<%@ page import="java.time.format.DateTimeFormatter" %>
-        									Updated on: ${job.updatedOn.format( DateTimeFormatter.ofPattern("dd.MM.yyyy HH.mm"))} <-- need to show pretty time :(
-        								</small>
-      								</button>
-    								</h2>
-  								</div>
-  							</div>
                 		</div>
                 	</div>
                 </c:forEach>
@@ -142,13 +126,18 @@
               </div>
         </section>
 
-        <%@ include file="components/footer.jsp" %> 
-
 		<script>
 			setTimeout(function() {
         		bootstrap.Alert.getOrCreateInstance(document.querySelector(".alert")).close();
     		}, 3000)
 		</script>
-     
+        <%@ include file="components/footer.jsp" %>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" type="text/javascript"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-timeago/1.6.7/jquery.timeago.min.js" type="text/javascript"></script>
+     	<script>
+     		jQuery(document).ready(function() {
+     		  jQuery("time.timeago").timeago();
+     		});
+     	</script>
     </body>
 </html>
