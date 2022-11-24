@@ -53,29 +53,48 @@
                 
                 <c:if test="${not empty users}">
                 	<c:forEach var="user" items="${users}">
+                	
+                	<c:choose>
+                		<c:when test="${user.firstname == null}">
                 		<div class="col-lg-4 mb-5">
-                			<div class="card" style="width: 19rem;">
-                				<img src="assets/img/${user.img}" class="card-img-top" alt="avatar">
-                				<div class="card-body text-center">
-                					<h4 class="card-title">${user.firstname} ${user.lastname} 
-                						<a href=""><i class="fa-solid fa-circle-check" title="verified"></i></a>
-                					</h4>
-
-                					<i class="fa-brands fa-twitter"></i>
-                          			<i class="fa-brands fa-linkedin"></i>
-                          			<a href="https://www.github.com/hadrihl"><i class="fa-brands fa-github"></i></a>
-                					
-                					<p class="card-text">${user.bio}</p>
-                					<p><i class="fa-sharp fa-solid fa-building"></i> ${user.company} <br> 
-                						${user.city} ${user.country}</p>
-                						
-                					<form>
-                          				<a href="#" class="btn btn-outline-primary">Follow</a>
-                          				<a href="#" class="btn btn-outline-secondary">Message</a>
-                        			</form>
-                				</div>
-                			</div>
-                		</div>
+                		<div class="card text-center" style="width: 18rem;">
+	                		<svg class="bd-placeholder-img card-img-top" width="18rem" height="28.3rem" xmlns="http://www.w3.org/2000/svg" role="img" focusable="false">
+								<rect width="100%" height="100%" fill="#868e96"></rect>
+							</svg>
+	                	<div class="card-body" style="margin-bottom: 8.8rem;">
+	                		<h4 class="card-title">${user.username}</h4>
+	                		<h5 class="card-text">${user.email}</h5>
+	                	</div>
+	                	</div>
+	                	</div>
+                		</c:when>
+                		<c:otherwise>
+                			<div class="col-lg-4 mb-5">
+	                			<div class="card" style="width: 19rem;">
+	                				<img src="assets/img/${user.img}" class="card-img-top" alt="avatar">
+	                				<div class="card-body text-center">
+	                					<h4 class="card-title">${user.firstname} ${user.lastname} 
+	                						<a href=""><i class="fa-solid fa-circle-check" title="verified"></i></a>
+	                					</h4>
+	
+	                					<i class="fa-brands fa-twitter"></i>
+	                          			<i class="fa-brands fa-linkedin"></i>
+	                          			<a href="https://www.github.com/hadrihl"><i class="fa-brands fa-github"></i></a>
+	                					
+	                					<p class="card-text">${user.bio}</p>
+	                					<p><i class="fa-sharp fa-solid fa-building"></i> ${user.company} <br> 
+	                						${user.city} ${user.country}</p>
+	                						
+	                					<form>
+	                          				<a href="#" class="btn btn-outline-primary">Follow</a>
+	                          				<a href="#" class="btn btn-outline-secondary">Message</a>
+	                        			</form>
+	                				</div>
+	                			</div>
+	                		</div>
+                		</c:otherwise>
+                	</c:choose>
+                		
                 	</c:forEach>
                 </c:if>
 
