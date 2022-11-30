@@ -1,12 +1,19 @@
 package com.example.linkedmein.entity;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -45,6 +52,14 @@ public class User {
 	
 	@Column(name = "reset_password_token", length = 30)
 	private String resetPasswordToken;
+	
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinTable(
+			name = "users_roles",
+			joinColumns = @JoinColumn(name = "user_id"),
+			inverseJoinColumns = @JoinColumn(name = "role_id")
+			)
+	private Set<Role> roles = new HashSet<>();
 	
 	// Generate Getters and Setters
 	public Integer getId() {
@@ -136,5 +151,14 @@ public class User {
 	}
 	public void setPosts(List<Post> posts) {
 		this.posts = posts;
+	}
+	public Set<Role> getRoles() {
+		return roles;
+	}
+	public void addRoles(Role role) {
+		this.roles.add(role);
+	}
+	public void removeRoles(Role role) {
+		this.roles.remove(role);
 	}
 }

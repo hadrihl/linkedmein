@@ -44,6 +44,13 @@
                                 	<i class="fa-solid fa-table-columns"></i>
                                 	Jobs Posting</a>
                                 </li>
+                                <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+                                <sec:authorize access="hasAuthority('ADMIN')">
+                                <li><a class="dropdown-item" href="/users">
+                                	<i class="fa-solid fa-table-columns"></i>
+                                	Manage Users</a>
+                                </li>
+                                </sec:authorize>
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
                                 	<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
