@@ -1,11 +1,16 @@
 package com.example.linkedmein.service;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import com.example.linkedmein.entity.Role;
 import com.example.linkedmein.entity.User;
 
 public class CustomUserDetails implements UserDetails {
@@ -18,8 +23,14 @@ public class CustomUserDetails implements UserDetails {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		// TODO Auto-generated method stub
-		return null;
+		Set<Role> roles = user.getRoles();
+		List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+		
+		for(Role role : roles) {
+			authorities.add(new SimpleGrantedAuthority(role.getName()));
+		}
+		
+		return authorities;
 	}
 
 	@Override
